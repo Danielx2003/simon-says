@@ -1,89 +1,165 @@
+from tkinter import *
 import random
-from random import randint
-from random import choices
-import time
 
-def delay(delayTime):
-    time.sleep(delayTime)
+fontType = ("Verdana", 12)
 
-    for i in range(15):
-        print("\n")
+class window:
 
-    return None
+    def __init__(self, master, length, time):
+        self.master = master
+        master.title("Simon")
 
-def userInput(sequence, num):
-    print("enter the sequence you just saw on seperate lines")
-    userIn = []
-    for i in range(num):
-        user = str(input("enter the letter of the colour")).lower()
+        self.time = time
+        self.length = length
 
-        if user == "r":
-            userIn.append("red")
+        self.label = Label(text="Score:", font=fontType)
+        self.label.place(x=128,y=330)
+        self.score = Label(font=fontType)
+        self.score.place(x=180,y=330)
 
-        if user == "g":
-            userIn.append("green")
+        self.b1 = Button(master, width=12, height=6, bg="grey", relief=RIDGE, activebackground="blue",
+                         command=lambda: self.userInput("1"))
+        self.b1.place(x=10, y=10)
+        self.b2 = Button(master, width=12, height=6, bg="grey", relief=RIDGE, activebackground="blue",
+                         command=lambda: self.userInput("2"))
+        self.b2.place(x=120, y=10)
+        self.b3 = Button(master, width=12, height=6, bg="grey", relief=RIDGE, activebackground="blue",
+                         command=lambda: self.userInput("3"))
+        self.b3.place(x=230, y=10)
+        self.b4 = Button(master, width=12, height=6, bg="grey", relief=RIDGE, activebackground="blue",
+                         command=lambda: self.userInput("4"))
+        self.b4.place(x=10, y=120)
+        self.b5 = Button(master, width=12, height=6, bg="grey", relief=RIDGE, activebackground="blue",
+                         command=lambda: self.userInput("5"))
+        self.b5.place(x=120, y=120)
+        self.b6 = Button(master, width=12, height=6, bg="grey", relief=RIDGE, activebackground="blue",
+                         command=lambda: self.userInput("6"))
+        self.b6.place(x=230, y=120)
+        self.b7 = Button(master, width=12, height=6, bg="grey", relief=RIDGE, activebackground="blue",
+                         command=lambda: self.userInput("7"))
+        self.b7.place(x=10, y=230)
+        self.b8 = Button(master, width=12, height=6, bg="grey", relief=RIDGE, activebackground="blue",
+                         command=lambda: self.userInput("8"))
+        self.b8.place(x=120, y=230)
+        self.b9 = Button(master, width=12, height=6, bg="grey", relief=RIDGE, activebackground="blue",
+                         command=lambda: self.userInput("9"))
+        self.b9.place(x=230, y=230)
 
-        if user == "p":
-            userIn.append("purple")
+        self.sequence(length)
+        self.b1.after(time, lambda: self.compare(length))
 
-        if user == "b":
-            userIn.append("blue")
+    def compare(self, length):
+        with open("userInput.txt", "r") as f:
+            User = f.read()
 
+        with open("AI Sequence.txt", "r") as f:
+            AI = f.read()
 
-    if userIn == sequence:
-        print("Correct")
-        print("\n")
-        time.sleep(2)
-    else:
-        print("You scored, ",num-1)
-        quit()
-
-
-def sequenceGenerator(num, delayTime):
-    TWHITE = '\033[37m'
-    TGREEN = '\033[32m'
-    TPURPLE = '\033[35m'
-    TRED = '\033[31m'
-    TBLUE = '\033[34m'
-    time.sleep(0.75)
-    sequence = []
-    for i in range(num):
-        time.sleep(0.5)
-        string = ",".join(random.choices(colours))
-        if string == "green":
-            print(TGREEN + string, TWHITE)
-            sequence.append(string)
-
-        if string == "red":
-            print(TRED + string, TWHITE)
-            sequence.append(string)
-
-        if string == "blue":
-            print(TBLUE + string, TWHITE)
-            sequence.append(string)
-
-        if string == "purple":
-            print(TPURPLE + string, TWHITE)
-            sequence.append(string)
-
-    delay(delayTime)
+        game = True
 
 
-    userInput(sequence,num)
+        for i in range(length):
+            try:
+                if User[i] == AI[i]:
+                    game = True
+                else:
+                    game = False
+            except:
+                game = False
+                pass
 
-    return None
+        if game == True:
+            self.score.configure(text=(self.length))
+            root.after(100, x.__init__(root, (length+1), (time+3500)))
 
-endGame = False
-num = 0
-delayTime = 1.5
-while endGame == False:
-    colours = ["red", "blue", "green", "purple"]
-    string = ""
-    num += 1
-    if delayTime > 0.5:
-        delayTime -= 0.
-    sequenceGenerator(num, delayTime)
+        else:
+            print("Game over")
+            root.destroy()
 
+
+
+    def userInput(self, num):
+        with open("userInput.txt", "a") as f:
+            if num == "1":
+                f.write(num)
+            if num == "2":
+                f.write(num)
+            if num == "3":
+                f.write(num)
+            if num == "4":
+                f.write(num)
+            if num == "5":
+                f.write(num)
+            if num == "6":
+                f.write(num)
+            if num == "7":
+                f.write(num)
+            if num == "8":
+                f.write(num)
+            if num == "9":
+                f.write(num)
+
+
+
+    def sequence(self, length):
+        with open("AI Sequence.txt", "w") as f:
+            f.close()
+
+        with open("userInput.txt", "w") as f:
+            f.close()
+
+        num = 1000
+
+        numbers = ["1", "2", "3", "4", "5", "6", "7", "8", "9"]
+        for i in range(length):
+            string = "".join(random.choices(numbers))
+            num += 1000
+
+            with open("AI Sequence.txt","a") as f:
+                f.write(string)
+
+            if string == "1":
+                self.b1.after(num, lambda: self.b1.configure(background="red"))
+                self.b1.after((num+750), lambda: self.b1.configure(background="grey"))
+
+            if string == "2":
+                self.b2.after(num, lambda: self.b2.configure(background="red"))
+                self.b2.after((num+750), lambda: self.b2.configure(background="grey"))
+
+            if string == "3":
+                self.b3.after(num, lambda: self.b3.configure(background="red"))
+                self.b3.after((num+750), lambda: self.b3.configure(background="grey"))
+
+            if string == "4":
+                self.b4.after(num, lambda: self.b4.configure(background="red"))
+                self.b4.after((num+750), lambda: self.b4.configure(background="grey"))
+
+            if string == "5":
+                self.b5.after(num, lambda: self.b5.configure(background="red"))
+                self.b5.after((num+750), lambda: self.b5.configure(background="grey"))
+
+            if string == "6":
+                self.b6.after(num, lambda: self.b6.configure(background="red"))
+                self.b6.after((num+750), lambda: self.b6.configure(background="grey"))
+
+            if string == "7":
+                self.b7.after(num, lambda: self.b7.configure(background="red"))
+                self.b7.after((num+750), lambda: self.b7.configure(background="grey"))
+
+            if string == "8":
+                self.b8.after(num, lambda: self.b8.configure(background="red"))
+                self.b8.after((num+750), lambda: self.b8.configure(background="grey"))
+
+            if string == "9":
+                self.b9.after(num, lambda: self.b9.configure(background="red"))
+                self.b9.after((num+750), lambda: self.b9.configure(background="grey"))
+
+length = 1
+time = 7500
+root = Tk()
+root.geometry("335x400")
+x = window(root, length, time)
+root.mainloop()
 
 
 
